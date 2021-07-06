@@ -54,3 +54,83 @@ class Game:
             self.turn = 2
         else:
             self.turn = 1
+
+def Main():
+    global client_num
+    global words
+
+    # Set up the server
+    ip = '192.168.56.108'
+    if len(sys.argv) < 2:
+        print("Enter the number of PORT ")
+        sys.exit()
+    port = int(sys.argv[1])
+
+    if len(sys.argv) > 2:
+        text_file = open(sys.argv[2], "r")
+        words = text_file.read().split(', ')
+
+    s = socket.socket(socket .AF_INET, socket.SOCK_STREAM)  # Create TCP Socket
+    print('The server is running on the host ' + ip + '| port ' + str(port))
+
+    # Bind and Listen
+    try:
+        s.bind((ip, port))  # Bind to connection
+    except socket.error as e:
+        print(str(e))
+    s.listen(6)  # Listen to X client
+
+    # End
+
+    # Start accepting Client connections
+    while True:
+        c, addr = s.accept()
+        client_num += 1
+        print("A connection " + str(client_num) + " is established from: " + str(addr)) 
+        start_new_thread(clientThread, (c,))
+
+def getGame(total_players_requested):
+    if total_players_requested == 2:
+        for game in games:
+            if not game.full:
+                game.full = True
+                return (game, 2)
+    if len(games) < 3:
+        word = words[random.randint(0, 14)]
+        game = Game(word, total_players_requested)
+        games.append(game)
+        return (game, 1)
+    else:
+        return -1
+
+def clientThread(c):  # Threaded for client handler
+    global client_num
+
+	# Is it a two player game? expected 2, 0
+    twoPlayerSignal = c.recv(1024).decode('utf-8')
+
+    if twoPlayerSignal == '2':
+        x = getGame(2)
+        if x == -1:
+            send(c, 'server is overloaded')
+        else:
+            game, player = x
+            send(c, 'Waiting for other player!')
+
+            while not game.full:
+                continue
+            send(c, 'The Game has Begun!')
+            two_player(c, player, game)
+
+    else:
+        x = getGame(1)
+        if x == -1:
+            send(c, 'server is overloaded')
+        else:
+            game, player = x
+            one_player(c, game)
+ 
+def send(c, msg):
+    packet = bytes([len(msg)]) + bytes(msg, 'utf8')
+    c.send(packet)
+
