@@ -59,3 +59,24 @@ else:
             print(" ".join(list(gameString)))
             print("Incorrect Guesses: " + " ".join(incorrect_guesses) + "\n")
             if "_" not in gameString or len(incorrect_guesses) >= 6:
+                continue
+            else:
+                letter_guessed = ''
+                valid = False
+                while not valid:
+                    letter_guessed = input('Letter to guess: ').lower()
+                    if letter_guessed in incorrect_guesses or letter_guessed in gameString:
+                        print("Error! Letter " + letter_guessed.upper() + " has previously been guessed, please choose another letter to guess.")
+                    elif len(letter_guessed) > 1 or not letter_guessed.isalpha():
+                        print("Error! Please choose one letter to guess")
+                    else:
+                        valid = True
+                msg = bytes([len(letter_guessed)]) + bytes(letter_guessed, 'utf8')
+                s.send(msg)
+
+    s.shutdown(socket.SHUT_RDWR)
+    s.close()
+
+
+if __name__ == '__main__':
+    Main()
