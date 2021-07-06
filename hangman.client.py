@@ -17,6 +17,11 @@ def Main():
     print(">>", end='')
     msg = input().lower()
 
+    #ask player to input name & send it to server
+    name = input("Enter Your Name: ")
+    print("\nPlayer: ", name)
+    s.send(b'PLAYER ON BOARD: '+ name.encode())
+
     while 1:
         if msg == 'yes' or msg == 'no':
             break
