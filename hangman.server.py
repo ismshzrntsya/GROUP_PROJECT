@@ -36,7 +36,7 @@ class Game:
         elif not '_' in self.gameString:
             return 'CONGRATULATIONS! YOU ARE THE WINNER!'
         else:
-            return ''        
+            return ''
 
     def guess(self, letter):
         if letter not in self.word or letter in self.gameString:
@@ -91,6 +91,9 @@ def Main():
         c, addr = s.accept()
         client_num += 1
         print("A connection " + str(client_num) + " is established from: " + str(addr)) 
+        #print info from client
+        info = c.recv(1024)
+        print(info.decode('utf-8'))
         start_new_thread(clientThread, (c,))
 
 def getGame(total_players_requested):
