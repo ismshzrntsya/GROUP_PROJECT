@@ -35,3 +35,27 @@ def Main():
 
         print("A single-player game began")
         playGame(s)
+
+def recv_helper(socket):
+    first_byte_value = int(socket.recv(1)[0])
+    if first_byte_value == 0:
+        x, y = socket.recv(2)
+        return 0, socket.recv(int(x)), socket.recv(int(y))
+    else:
+        return 1, socket.recv(first_byte_value)
+
+def playGame(s):
+    while True:
+        pkt = recv_helper(s)
+        msgFlag = pkt[0]
+        if msgFlag != 0:
+            msg = pkt[1].decode('utf8')
+            print(msg)
+            if msg == 'server is overloaded' or 'The Game is Over!' in msg:
+                break
+else:
+            gameString = pkt[1].decode('utf8')
+            incorrect_guesses = pkt[2].decode('utf8')
+            print(" ".join(list(gameString)))
+            print("Incorrect Guesses: " + " ".join(incorrect_guesses) + "\n")
+            if "_" not in gameString or len(incorrect_guesses) >= 6:
