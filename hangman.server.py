@@ -134,3 +134,79 @@ def send(c, msg):
     packet = bytes([len(msg)]) + bytes(msg, 'utf8')
     c.send(packet)
 
+def send_game_control_packet(c, game):
+    msgFlag = bytes([0])
+    data = bytes(game.gameString + ''.join(game.incorrect_letters), 'utf8')
+    gamePacket = msgFlag + bytes([len(game.word)]) + bytes([game.incorrect_guesses]) + data
+    c.send(gamePacket)
+
+def two_player(c, player, game):
+    global client_num                                                  # SEND_2 >>> Player Number
+
+    while True:
+        while game.turn != player:
+            continue
+        game.lock.acquire()
+
+        status = game.getStatus()
+        if status != '':
+            send_game_control_packet(c, game)
+            send(c, status)
+            send(c, "The Game is Over!")
+            game.changeTurn()
+            game.lock.release()
+            break
+
+        send(c, 'Now it's your turn!')
+
+        send_game_control_packet(c, game)
+
+        rcvd = c.recv(1024)
+        letter_guessed = bytes([rcvd[1]]).decode('utf-8')
+
+        send(c, game.guess(letter_guessed))
+
+        status = game.getStatus()
+        if len(status) > 0:
+            send_game_control_packet(c, game)
+            send(c, status)
+            send(c, "Game Over!")
+            game.changeTurn()
+            game.lock.release()
+            break
+
+        send(c, "Waiting for the other player...")
+        game.changeTurn()
+        game.lock.release()
+
+    if game in games:
+        games.remove(game)
+    c.close()
+    client_num -= 1
+
+
+def one_player(c, game):
+    global client_num
+
+    while True:
+        send_game_control_packet(c, game)
+
+        rcvd = c.recv(1024)
+        letter_guessed = bytes([rcvd[1]]).decode('utf-8')
+
+        send(c, game.guess(letter_guessed))
+
+        status = game.getStatus()
+        if len(status) > 0:
+            send_game_control_packet(c, game)
+            send(c, status)
+            send(c, "The Game is Over!")
+            break
+    games.remove(game)
+    c.close()
+    client_num -= 1
+
+
+
+if __name__ == '__main__':
+    Main()
