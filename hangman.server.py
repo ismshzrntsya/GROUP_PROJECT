@@ -2,6 +2,8 @@ import socket
 from _thread import *
 import sys
 import random
+import time
+
 client_num = 0  # Total number of clients
 words = [
     'vaccine', 'corona', 'virus', 'antivaccine', 'safe',
@@ -30,24 +32,26 @@ class Game:
 
     def getStatus(self):
         if self.incorrect_guesses >= 6:
-            return 'You are doomed! :('
+            return 'BOO ! YOU ARE DOOMED ! TRY AGAIN LATER :('
         elif not '_' in self.gameString:
-            return 'You are the Winner!'
+            return 'CONGRATULATIONS! YOU ARE THE WINNER!'
         else:
-            return ''
+            return ''        
 
     def guess(self, letter):
         if letter not in self.word or letter in self.gameString:
             self.incorrect_guesses += 1
             self.incorrect_letters.append(letter)
-            return 'Incorrect!'
+            time.sleep(3)
+            return 'Ops, incorrect! hm meh :('
         else:
             gameString = list(self.gameString)
             for i in range(len(self.word)):
                 if self.word[i] == letter:
                     gameString[i] = letter
             self.gameString = ''.join(gameString)
-            return 'Correct!'
+            time.sleep(3)
+            return 'Oh yeah, correct! yeay :)'
 
     def changeTurn(self):
         if self.turn == 1:
@@ -106,7 +110,7 @@ def getGame(total_players_requested):
 def clientThread(c):  # Threaded for client handler
     global client_num
 
-	# Is it a two player game? expected 2, 0
+	# If it's a two player game? expected 2, 0
     twoPlayerSignal = c.recv(1024).decode('utf-8')
 
     if twoPlayerSignal == '2':
@@ -157,7 +161,7 @@ def two_player(c, player, game):
             game.lock.release()
             break
 
-        send(c, 'Now it's your turn!')
+        send(c, 'Now its your turn!')
 
         send_game_control_packet(c, game)
 
