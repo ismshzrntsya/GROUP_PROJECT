@@ -13,23 +13,25 @@ def Main():
     s = socket.socket()
     s.connect((ip, port))
 
-    print("Would you like to play the game with two players? (yes/no)")
+    print("\n                 HANGMAN GAME PYTHON            ")
+    print("\nSingle Player or Two Players? (yes=TwoPlayers/no=SinglePlayer)")
     print(">>", end='')
     msg = input().lower()
 
     while 1:
         if msg == 'yes' or msg == 'no':
             break
-        msg = input('Please enter either yes or no')
+        msg = input('Please enter either yes (TwoPlayers) or no (SinglePlayer)')
+
 
     if msg == 'yes':
-        # Signal game start (2P)
+        # Signal game start for 2 player
         twoPlayerSignal = '2'.encode('utf-8')
         s.send(twoPlayerSignal)
         playGame(s)
 
     else:
-        # Signal game (1P)
+        # Signal game for single player
         twoPlayerSignal = '0'.encode('utf-8')
         s.send(twoPlayerSignal)
 
@@ -53,11 +55,11 @@ def playGame(s):
             print(msg)
             if msg == 'server is overloaded' or 'The Game is Over!' in msg:
                 break
-else:
+        else:
             gameString = pkt[1].decode('utf8')
             incorrect_guesses = pkt[2].decode('utf8')
             print(" ".join(list(gameString)))
-            print("Incorrect Guesses: " + " ".join(incorrect_guesses) + "\n")
+            print("Your list of incorrect guesses: " + " ".join(incorrect_guesses) + "\n")
             if "_" not in gameString or len(incorrect_guesses) >= 6:
                 continue
             else:
@@ -66,10 +68,11 @@ else:
                 while not valid:
                     letter_guessed = input('Letter to guess: ').lower()
                     if letter_guessed in incorrect_guesses or letter_guessed in gameString:
-                        print("Error! Letter " + letter_guessed.upper() + " has previously been guessed, please choose another letter to guess.")
+                        print("ATTENTION! YOU HAVE GUESS THE LETTER " + letter_guessed.upper() + " BEFORE, PLEASE GUESS ANOTHER LETTER.")
                     elif len(letter_guessed) > 1 or not letter_guessed.isalpha():
-                        print("Error! Please choose one letter to guess")
+                        print("ERROR! PLEASE GUESS ONE LETTER ONLY")
                     else:
+                        print(" ~~ Dup Dap Dup Dap ~~ ")
                         valid = True
                 msg = bytes([len(letter_guessed)]) + bytes(letter_guessed, 'utf8')
                 s.send(msg)
