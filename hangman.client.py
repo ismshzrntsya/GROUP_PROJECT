@@ -86,5 +86,15 @@ def playGame(s):
     s.close()
 
 
+
+    while True:
+        play_again = input("Do you want to play again? [yes/no]")
+        if 'yes' in play_again.lower():
+            playGame(s)
+        elif 'no' in play_again.lower():
+            break
+        else:
+            print("Huh ? What do you mean ?")
+
 if __name__ == '__main__':
     Main()
