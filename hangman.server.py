@@ -31,7 +31,7 @@ class Game:
             self.full = True
 
     def getStatus(self):
-        if self.incorrect_guesses >= 7:
+        if self.incorrect_guesses >= 8:
             return 'BOO ! YOU ARE DOOMED ! TRY AGAIN LATER :('
         elif not '_' in self.gameString:
             return 'CONGRATULATIONS! YOU ARE THE WINNER!'
@@ -90,7 +90,7 @@ def Main():
     while True:
         c, addr = s.accept()
         client_num += 1
-        print("A connection " + str(client_num) + " is established from: " + str(addr)) 
+        print("A connection " + str(client_num) + " is established from: " + str(addr))
         #print info from client
         info = c.recv(1024)
         print(info.decode('utf-8'))
