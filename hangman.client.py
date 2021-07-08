@@ -26,7 +26,7 @@ def Main():
     while 1:
         if msg == 'yes' or msg == 'no':
             break
-        msg = input('Please enter either yes (TwoPlayers) or no (SinglePlayer)')
+        msg = input('\nPlease enter either yes (TwoPlayers) or no (SinglePlayer)')
 
 
     if msg == 'yes':
@@ -64,8 +64,8 @@ def playGame(s):
             gameString = pkt[1].decode('utf8')
             incorrect_guesses = pkt[2].decode('utf8')
             print(" ".join(list(gameString)))
-            print("Your list of incorrect guesses: " + " ".join(incorrect_guesses) + "\n")
-            if "_" not in gameString or len(incorrect_guesses) >= 6:
+            print("\nYour list of incorrect guesses: " + " ".join(incorrect_guesses) + "\n")
+            if "_" not in gameString or len(incorrect_guesses) >= 5:
                 continue
             else:
                 letter_guessed = ''
@@ -73,9 +73,9 @@ def playGame(s):
                 while not valid:
                     letter_guessed = input('Letter to guess: ').lower()
                     if letter_guessed in incorrect_guesses or letter_guessed in gameString:
-                        print("ATTENTION! YOU HAVE GUESS THE LETTER " + letter_guessed.upper() + " BEFORE, PLEASE GUESS ANOTHER LETTER.")
+                        print("\nATTENTION! YOU HAVE GUESS THE LETTER " + letter_guessed.upper() + " BEFORE, PLEASE GUESS ANOTHER LETTER.")
                     elif len(letter_guessed) > 1 or not letter_guessed.isalpha():
-                        print("ERROR! PLEASE GUESS ONE LETTER ONLY")
+                        print("\nERROR! PLEASE GUESS ONE LETTER ONLY")
                     else:
                         print(" ~~ Dup Dap Dup Dap ~~ ")
                         valid = True
@@ -88,9 +88,10 @@ def playGame(s):
 
 
     while True:
-        play_again = input("Do you want to play again? [yes/no]")
+        play_again = input("\nDo you want to play again? [yes/no]")
         if 'yes' in play_again.lower():
-            playGame(s)
+            print("OPSS, SORRY! YOU NEED TO RESTART IT MANUALLY :3")
+            break
         elif 'no' in play_again.lower():
             break
         else:
