@@ -6,9 +6,9 @@ import time
 
 client_num = 0  # Total number of clients
 words = [
-    'vaccine', 'corona', 'virus', 'antivaccine', 'safe',
-    'car', 'strict', 'addition', 'health', 'astrazeneca',
-    'cold', 'sick', 'case', 'depressed', 'real'
+    'vaccine', 'corona', 'virus', 'antivac', 'safe',
+    'car', 'strict', 'add', 'health', 'pfizer',
+    'cold', 'sick', 'case', 'depress', 'real'
 ]
 games = []
 
@@ -31,8 +31,8 @@ class Game:
             self.full = True
 
     def getStatus(self):
-        if self.incorrect_guesses >= 8:
-            return '\nBOO ! YOU ARE DOOMED ! TRY AGAIN LATER :('
+        if self.incorrect_guesses >=8:
+            return 'BOO ! YOU ARE DOOMED ! TRY AGAIN LATER :('
         elif not '_' in self.gameString:
             return '\nCONGRATULATIONS! YOU ARE THE WINNER!'
         else:
@@ -90,7 +90,7 @@ def Main():
     while True:
         c, addr = s.accept()
         client_num += 1
-        print("A connection " + str(client_num) + " is established from: " + str(addr)) 
+        print("A connection " + str(client_num) + " is established from: " + str(addr))
         #print info from client
         info = c.recv(1024)
         print(info.decode('utf-8'))
