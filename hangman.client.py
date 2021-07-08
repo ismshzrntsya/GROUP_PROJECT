@@ -65,7 +65,7 @@ def playGame(s):
             incorrect_guesses = pkt[2].decode('utf8')
             print(" ".join(list(gameString)))
             print("\nYour list of incorrect guesses: " + " ".join(incorrect_guesses) + "\n")
-            if "_" not in gameString or len(incorrect_guesses) >= 5:
+            if "_" not in gameString or len(incorrect_guesses) >= 8:
                 continue
             else:
                 letter_guessed = ''
