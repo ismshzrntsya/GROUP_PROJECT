@@ -31,10 +31,10 @@ class Game:
             self.full = True
 
     def getStatus(self):
-        if self.incorrect_guesses >= 6:
-            return 'BOO ! YOU ARE DOOMED ! TRY AGAIN LATER :('
+        if self.incorrect_guesses >= 8:
+            return '\nBOO ! YOU ARE DOOMED ! TRY AGAIN LATER :('
         elif not '_' in self.gameString:
-            return 'CONGRATULATIONS! YOU ARE THE WINNER!'
+            return '\nCONGRATULATIONS! YOU ARE THE WINNER!'
         else:
             return ''
 
@@ -43,7 +43,7 @@ class Game:
             self.incorrect_guesses += 1
             self.incorrect_letters.append(letter)
             time.sleep(3)
-            return 'Ops, incorrect! hm meh :('
+            return '\nOps, incorrect! hm meh :('
         else:
             gameString = list(self.gameString)
             for i in range(len(self.word)):
@@ -51,7 +51,7 @@ class Game:
                     gameString[i] = letter
             self.gameString = ''.join(gameString)
             time.sleep(3)
-            return 'Oh yeah, correct! yeay :)'
+            return '\nOh yeah, correct! yeay :)'
 
     def changeTurn(self):
         if self.turn == 1:
@@ -126,7 +126,7 @@ def clientThread(c):  # Threaded for client handler
 
             while not game.full:
                 continue
-            send(c, 'The Game has Begun!')
+            send(c, '\nThe Game has Begun!')
             two_player(c, player, game)
 
     else:
